@@ -12,7 +12,7 @@ SuffixTree::SuffixTree(const std::string& textToAnalize):
 {
 	this->activePoint = new ActivePoint(pRoot);
 	this->build();
-	this->applyDFSTraversing();
+	//this->applyDFSTraversing();
 	//std::cout << this->validate();
 }
 
@@ -33,19 +33,21 @@ Node* SuffixTree::selectNode(int position)
 char SuffixTree::findNextCharacterInActiveNode(int position)
 {
 	Node* nextNode = this->activePoint->getActiveNode()->findNodeWithStartingChar(this->textToAnalyze, textToAnalyze[this->activePoint->getActiveEdge()]);
-	if (nextNode->getLengthOfNode() >= this->activePoint->getActiveLength()) {
-		return this->textToAnalyze[nextNode->getFromIndex() + this->activePoint->getActiveLength()];
-	}
-	if (nextNode->getLengthOfNode() + 1 == this->activePoint->getActiveLength()) {
-		if (nextNode->findNodeWithStartingChar(this->textToAnalyze, textToAnalyze[position]) != nullptr) {
-			return textToAnalyze[position];
+	if (nextNode != nullptr) {
+		if (nextNode->getLengthOfNode() >= this->activePoint->getActiveLength()) {
+			return this->textToAnalyze[nextNode->getFromIndex() + this->activePoint->getActiveLength()];
 		}
-	}
-	else {
-		this->activePoint->setActiveNode(nextNode);
-		this->activePoint->setActiveLength(this->activePoint->getActiveLength() - nextNode->getLengthOfNode() - 1);
-		this->activePoint->setActiveEdge(this->activePoint->getActiveEdge() + nextNode->getLengthOfNode() + 1);
-		return findNextCharacterInActiveNode(position);
+		if (nextNode->getLengthOfNode() + 1 == this->activePoint->getActiveLength()) {
+			if (nextNode->findNodeWithStartingChar(this->textToAnalyze, textToAnalyze[position]) != nullptr) {
+				return textToAnalyze[position];
+			}
+		}
+		else {
+			this->activePoint->setActiveNode(nextNode);
+			this->activePoint->setActiveLength(this->activePoint->getActiveLength() - nextNode->getLengthOfNode() - 1);
+			this->activePoint->setActiveEdge(this->activePoint->getActiveEdge() + nextNode->getLengthOfNode() + 1);
+			return findNextCharacterInActiveNode(position);
+		}
 	}
 
 	return '\0';
@@ -94,7 +96,7 @@ void SuffixTree::build()
 		this->remaining++;
 		leafEnd++;
 		while (this->remaining > 0) {
-			this->activePoint->getActiveNode()->updateLastToIndexes(leafEnd);
+			//this->activePoint->getActiveNode()->updateLastToIndexes(leafEnd);
 			if (this->activePoint->getActiveLength() == 0)
 			{
 
@@ -121,35 +123,30 @@ void SuffixTree::build()
 					}
 					else {
 
-						Node* tmp = this->activePoint->getActiveNode()->findNodeWithStartingChar(this->textToAnalyze, textToAnalyze[this->activePoint->getActiveEdge()]);
+						Node* nodeStartingWithChar = this->activePoint->getActiveNode()->findNodeWithStartingChar(this->textToAnalyze, textToAnalyze[this->activePoint->getActiveEdge()]);
+						
+						int beginningFromIndex = nodeStartingWithChar->getFromIndex();
+
 						Node* node = new Node();
+						memcpy(node, nodeStartingWithChar, sizeof(Node));
 
-						memcpy(node, tmp, sizeof(Node));
+						nodeStartingWithChar->clearNode();
+						nodeStartingWithChar->setToIndex(nodeStartingWithChar->getFromIndex() + this->activePoint->getActiveLength());
 
-						int beginningFromIndex = node->getFromIndex();
 						node->setFromIndex(node->getFromIndex() + this->activePoint->getActiveLength());
-						//usunac z active node z children
-						//this->activePoint->getActiveNode()->deleteChildNode(node);
-
-						Node* newInternalNode = new Node(beginningFromIndex, beginningFromIndex + this->activePoint->getActiveLength());
 						Node* newLeafNode = new Node(position, leafEnd);
 
-						newInternalNode->addChildNode(node);
+						nodeStartingWithChar->addChildNode(node);
 						//newInternalNode->setNodeChild(node, newInternalNode->getFromIndex() + this->activePoint->getActiveLength());
-						newInternalNode->addChildNode(newLeafNode);
-						//newInternalNode->setNodeChild(newLeafNode, position);
-						newInternalNode->setNodeIndex(0);
-						tmp = newInternalNode;
-						//this->activePoint->getActiveNode()->addChildNode(newInternalNode);
-						//this->activePoint->getActiveNode()->setNodeChild(newInternalNode,newInternalNode->getFromIndex());
+						nodeStartingWithChar->addChildNode(newLeafNode);
 
 
 						if (lastCreatedNodeInThisPhase != nullptr) {
-							lastCreatedNodeInThisPhase->setNodeSuffixLink(newInternalNode);
+							lastCreatedNodeInThisPhase->setNodeSuffixLink(nodeStartingWithChar);
 						}
 
-						lastCreatedNodeInThisPhase = newInternalNode;
-						newInternalNode->setNodeSuffixLink(pRoot);
+						lastCreatedNodeInThisPhase = nodeStartingWithChar;
+						nodeStartingWithChar->setNodeSuffixLink(pRoot);
 
 
 						if (this->activePoint->getActiveNode() != this->pRoot) {
@@ -163,7 +160,7 @@ void SuffixTree::build()
 					}
 				}
 				else {
-					Node* node = this->activePoint->getActiveNode()->findNodeWithStartingChar(this->textToAnalyze, textToAnalyze[this->activePoint->getActiveEdge()]);
+					Node* node = this->activePoint->getActiveNode()->findNodeWithStartingChar(this->textToAnalyze, textToAnalyze[position]);
 					Node* newLeafNode = new Node(position, leafEnd);
 					node->addChildNode(newLeafNode);
 					//node->setNodeChild(newLeafNode, position);

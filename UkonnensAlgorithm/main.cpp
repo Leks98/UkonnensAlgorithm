@@ -17,8 +17,9 @@ int main()
 	FileService service("firstText.txt");
 	
 	try {
+		std::string text = service.readFile();
 		auto beginningTime = std::chrono::steady_clock::now();
-		SuffixTree suffixTree = SuffixTree("abca$");
+		SuffixTree suffixTree = SuffixTree("adeacdade$");
 		auto endTime = std::chrono::steady_clock::now();
 		std::cout << "Tree building time in seconds: " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - beginningTime).count() / 1000.0 << std::endl;
 	}
