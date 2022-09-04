@@ -18,7 +18,7 @@ int main()
 	
 	try {
 		auto beginningTime = std::chrono::steady_clock::now();
-		SuffixTree suffixTree = SuffixTree("xx$");
+		SuffixTree suffixTree = SuffixTree("abca$");
 		auto endTime = std::chrono::steady_clock::now();
 		std::cout << "Tree building time in seconds: " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - beginningTime).count() / 1000.0 << std::endl;
 	}

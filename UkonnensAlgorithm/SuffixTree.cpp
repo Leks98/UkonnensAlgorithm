@@ -121,14 +121,17 @@ void SuffixTree::build()
 					}
 					else {
 
-						Node* node = this->activePoint->getActiveNode()->findNodeWithStartingChar(this->textToAnalyze, textToAnalyze[this->activePoint->getActiveEdge()]);
+						Node* tmp = this->activePoint->getActiveNode()->findNodeWithStartingChar(this->textToAnalyze, textToAnalyze[this->activePoint->getActiveEdge()]);
+						Node* node = new Node();
+
+						memcpy(node, tmp, sizeof(Node));
 
 						int beginningFromIndex = node->getFromIndex();
 						node->setFromIndex(node->getFromIndex() + this->activePoint->getActiveLength());
 						//usunac z active node z children
-						this->activePoint->getActiveNode()->deleteChildNode(node);
+						//this->activePoint->getActiveNode()->deleteChildNode(node);
 
-						Node* newInternalNode = new Node(beginningFromIndex, beginningFromIndex + this->activePoint->getActiveLength() - 1);
+						Node* newInternalNode = new Node(beginningFromIndex, beginningFromIndex + this->activePoint->getActiveLength());
 						Node* newLeafNode = new Node(position, leafEnd);
 
 						newInternalNode->addChildNode(node);
@@ -136,7 +139,8 @@ void SuffixTree::build()
 						newInternalNode->addChildNode(newLeafNode);
 						//newInternalNode->setNodeChild(newLeafNode, position);
 						newInternalNode->setNodeIndex(0);
-						this->activePoint->getActiveNode()->addChildNode(newInternalNode);
+						tmp = newInternalNode;
+						//this->activePoint->getActiveNode()->addChildNode(newInternalNode);
 						//this->activePoint->getActiveNode()->setNodeChild(newInternalNode,newInternalNode->getFromIndex());
 
 
