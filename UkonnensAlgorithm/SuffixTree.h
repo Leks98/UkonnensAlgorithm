@@ -14,6 +14,7 @@ private:
 
 public:
 	SuffixTree(const std::string& textToAnalize);
+	Node* getRoot();
 	~SuffixTree();
 
 private:
@@ -21,11 +22,11 @@ private:
 	Node* selectNode(int index);
 	char findNextCharacterInActiveNode(int position);
 	void moveDown(int position);
-	void setIndexNodeUsingDFSMethod(Node* node, int& nodeIndex);
+	/*void setIndexNodeUsingDFSMethod(Node* node, int& nodeIndex);
 	void implementDFSTraversing(Node* node, std::list<char> result);
 	void applyDFSTraversing();
 	bool validateBuildingProcess(Node* node, int index, int& currentPos);
-	bool validate();
+	bool validate();*/
 };
 
 

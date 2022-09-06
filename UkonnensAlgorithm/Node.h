@@ -31,7 +31,7 @@ public:
 	void addChildNodeByRange(const int fromIndex, const int toIndex);
 	void deleteChildNode(Node* node);
 	void addChildNode(Node* node);
-
+	void countNumberOfLeaves(int& number);
 	void clearNode();
 	int getChildrenArraySize();
 	Node* findNodeWithStartingChar(const std::string& textToAnalyze, char character);

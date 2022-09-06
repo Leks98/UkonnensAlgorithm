@@ -30,6 +30,15 @@
     <ClCompile Include="FileService.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SuffixTreeService.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SuffixTreeIterator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActivePoint.h">
@@ -42,6 +51,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FileService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SuffixTreeService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SuffixTreeIterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

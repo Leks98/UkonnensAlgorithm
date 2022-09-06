@@ -143,13 +143,18 @@
     <ClCompile Include="FileService.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="Source.cpp" />
     <ClCompile Include="SuffixTree.cpp" />
+    <ClCompile Include="SuffixTreeIterator.cpp" />
+    <ClCompile Include="SuffixTreeService.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActivePoint.h" />
     <ClInclude Include="FileService.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="SuffixTree.h" />
+    <ClInclude Include="SuffixTreeIterator.h" />
+    <ClInclude Include="SuffixTreeService.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

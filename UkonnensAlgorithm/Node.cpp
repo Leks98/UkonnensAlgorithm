@@ -66,7 +66,7 @@ void Node::setNodeChild(Node* child, int position)
 
 int Node::getLengthOfNode()
 {
-	return this->to - this->from;
+	return this->to - this->from - 1;
 }
 
 void Node::deleteChildrenArray()
@@ -116,6 +116,15 @@ void Node::addChildNode(Node* node)
 	++this->childrenArraySize;
 	this->children[this->childrenArraySize - 1] = node;
 	this->updateLastToIndexes(node->getToIndex());
+}
+void Node::countNumberOfLeaves(int& number)
+{
+	if (this->childrenArraySize == 0) {
+		number += 1;
+	}
+	for (int iter = 0; iter < this->childrenArraySize; ++iter) {
+		this->children[iter]->countNumberOfLeaves(number);
+	}
 }
 void Node::deleteChildNode(Node* node)
 {
@@ -172,3 +181,4 @@ void Node::updateLastToIndexes(const int charIndex)
 				this->children[iter]->updateLastToIndexes(charIndex);
 	}
 }
+
