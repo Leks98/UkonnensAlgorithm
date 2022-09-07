@@ -11,7 +11,7 @@ private:
 	int childrenArraySize = 0;
 	int from, to;
 	Node* suffixLink;
-	int index;
+private:
 	void deleteChildrenArray();
 public:
 	Node();
@@ -21,8 +21,6 @@ public:
 	void setFromIndex(int fromIndex);
 	int getToIndex();
 	void setToIndex(int toIndex);
-	int getNodeIndex();
-	void setNodeIndex(int nodeIndex);
 	Node* getNodeSuffixLink();
 	void setNodeSuffixLink(Node* suffixLink);
 	Node** getNodeChildren();
@@ -32,7 +30,6 @@ public:
 	void deleteChildNode(Node* node);
 	void addChildNode(Node* node);
 	void countNumberOfLeaves(int& number);
-	void clearNode();
 	int getChildrenArraySize();
 	Node* findNodeWithStartingChar(const std::string& textToAnalyze, char character);
 	void updateLastToIndexes(const int charIndex);

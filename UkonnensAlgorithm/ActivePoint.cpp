@@ -28,18 +28,18 @@ void ActivePoint::setActiveLength(int activeLength)
 
 void ActivePoint::increaseActiveLength()
 {
-	this->activeLength++;
+	++this->activeLength;
 }
 
 void ActivePoint::decreaseActiveLength()
 {
-	this->activeLength--;
+	--this->activeLength;
 }
 
 
 void ActivePoint::increaseActiveEdge()
 {
-	this->activeEdge++;
+	++this->activeEdge;
 }
 
 Node* ActivePoint::getActiveNode()

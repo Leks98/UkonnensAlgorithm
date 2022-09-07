@@ -6,9 +6,9 @@
 //#endif
 
 
-Node::Node(): from(-1), to(-1), suffixLink(nullptr), index(-1), childrenArraySize(0), children(nullptr) {
+Node::Node(): from(-1), to(-1), suffixLink(nullptr), childrenArraySize(0), children(nullptr) {
 };
-Node::Node(int fromIndex, int toIndex) : from(fromIndex), to(toIndex), suffixLink(nullptr), index(0), childrenArraySize(0), children(nullptr) {
+Node::Node(int fromIndex, int toIndex) : from(fromIndex), to(toIndex), suffixLink(nullptr), childrenArraySize(0), children(nullptr) {
 };
 
 Node::~Node()
@@ -33,17 +33,6 @@ void Node::setToIndex(int toIndex)
 	this->to = toIndex;
 }
 
-int Node::getNodeIndex()
-{
-	return this->index;
-}
-
-void Node::setNodeIndex(int nodeIndex)
-{
-	this->index = nodeIndex;
-}
-
-
 Node* Node::getNodeSuffixLink()
 {
 	return this->suffixLink;
@@ -66,7 +55,7 @@ void Node::setNodeChild(Node* child, int position)
 
 int Node::getLengthOfNode()
 {
-	return this->to - this->from - 1;
+	return this->to - this->from-1;
 }
 
 void Node::deleteChildrenArray()
@@ -83,19 +72,18 @@ void Node::addChildNodeByRange(const int fromIndex, const int toIndex)
 
 	//std::cout << *increasedArray;
 	
-	for (int iter = 0; iter < childrenArraySize; ++iter)
-	{
-		increasedArray[iter] = this->children[iter];
-	}
-	//memcpy(increasedArray, this->children, this->childrenArraySize * sizeof(Node*));
+	//for (int iter = 0; iter < childrenArraySize; ++iter)
+	//{
+	//	increasedArray[iter] = this->children[iter];
+	//}
+	memcpy(increasedArray, this->children, this->childrenArraySize * sizeof(Node*));
 	delete[] this->children;
 	this->children = increasedArray;
 	increasedArray = nullptr;
 	++this->childrenArraySize;
 	Node* childNode = new Node(fromIndex, toIndex);
 	this->children[this->childrenArraySize - 1] = childNode;
-	this->updateLastToIndexes(toIndex);
-	//std::cout << "";
+	//this->updateLastToIndexes(toIndex);
 }
 
 void Node::addChildNode(Node* node)
@@ -104,18 +92,18 @@ void Node::addChildNode(Node* node)
 
 	//std::cout << *increasedArray;
 
-	for (int iter = 0; iter < childrenArraySize; ++iter)
-	{
-		
-		increasedArray[iter] = this->children[iter];
-	}
-	//memcpy(increasedArray, this->children, this->childrenArraySize * sizeof(Node*));
+	//for (int iter = 0; iter < childrenArraySize; ++iter)
+	//{
+	//	
+	//	increasedArray[iter] = this->children[iter];
+	//}
+	memcpy(increasedArray, this->children, this->childrenArraySize * sizeof(Node*));
 	delete[] this->children;
 	this->children = increasedArray;
 	increasedArray = nullptr;
 	++this->childrenArraySize;
 	this->children[this->childrenArraySize - 1] = node;
-	this->updateLastToIndexes(node->getToIndex());
+	//this->updateLastToIndexes(node->getToIndex());
 }
 void Node::countNumberOfLeaves(int& number)
 {
@@ -128,41 +116,27 @@ void Node::countNumberOfLeaves(int& number)
 }
 void Node::deleteChildNode(Node* node)
 {
-	int idx = -1;
-	for (int iter = 0; iter < this->childrenArraySize; ++iter)
-	{
-		if (this->children[iter] == node)
-		{
-			idx = iter;
-			break;
-		}
-	}
-	if (idx != -1) {
 		Node** decreasedArray = new Node * [this->childrenArraySize - 1];
+		int tmp = 0;
 		for (int iter = 0; iter < this->childrenArraySize; ++iter)
 		{
-			if (iter != idx) {
-				decreasedArray[iter] = this->children[iter];
+			if (this->children[iter] != node) {
+				decreasedArray[iter - tmp] = this->children[iter];
+			}
+			else {
+				++tmp;
 			}
 		}
 		delete[] this->children;
 		this->children = decreasedArray;
 		--this->childrenArraySize;
-
-	}
-}
-void Node::clearNode()
-{
-	this->childrenArraySize = 0;
-	this->children = nullptr;
-	this->suffixLink = nullptr;
 }
 int Node::getChildrenArraySize()
 {
 	return this->childrenArraySize;
 }
 
-Node* Node::findNodeWithStartingChar(const std::string & textToAnalyze, char character)
+Node* Node::findNodeWithStartingChar(const std::string& textToAnalyze, char character)
 {
 	for (int iter = 0; iter < this->childrenArraySize; ++iter) {
 		if (textToAnalyze[this->children[iter]->getFromIndex()] == character) {
@@ -174,11 +148,10 @@ Node* Node::findNodeWithStartingChar(const std::string & textToAnalyze, char cha
 
 void Node::updateLastToIndexes(const int charIndex)
 {
-	if (this->childrenArraySize == 0) {
-		this->setToIndex(charIndex);
-	}
 	for (int iter = 0; iter < this->childrenArraySize; ++iter) {
-				this->children[iter]->updateLastToIndexes(charIndex);
+		if (this->children[iter]->childrenArraySize ==0) {
+			this->children[iter]->setToIndex(charIndex);
+		}
 	}
 }
 

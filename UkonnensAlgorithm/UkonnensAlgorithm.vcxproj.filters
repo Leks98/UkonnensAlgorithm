@@ -30,9 +30,6 @@
     <ClCompile Include="FileService.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SuffixTreeService.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
