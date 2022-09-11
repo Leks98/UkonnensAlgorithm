@@ -1,4 +1,5 @@
 #include "ActivePoint.h"
+
 ActivePoint::ActivePoint(Node* activeNode): activeEdge(-1), activeLength(0), activeNode(activeNode) {}
 
 ActivePoint::~ActivePoint()

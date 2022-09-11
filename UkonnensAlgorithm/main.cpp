@@ -19,14 +19,18 @@ int main()
 /*	SuffixTreeService treeService("b");
 	bool patternExists = treeService.checkIfPatternExist("cabag");
 	int patternOccurrences = treeService.countOccurrencesOfPattern("c"); *///xxxx
-
-	//findPattern zwraca iterator do pierwszego wystapienia slowa ++ do kolejnego slowa
 	//referencja zwraca cos np wskaznik lub iterator do tekstu co jest przed co jest za ta pozycja
-	//iterator umozliwiajacy przejscie przez wszytskie sufiksyw porzadku leksykograficznym 
-	//findFirst/FindLast
 	
 
+
+	//findPattern zwraca iterator do pierwszego wystapienia slowa ++ do kolejnego slowa
+
+	//findFirst/FindLast
 	//szablon parametryzowany typ 
+	
+	//-- find Last
+
+	//iterator umozliwiajacy przejscie przez wszytskie sufiksyw porzadku leksykograficznym 
 	//iterator w porzadku leksyograficnzym ale dla poddrzewa
 	//jaki jest rozmiar poddrzewa
 	//reczne nawigowanie po drzewie poziomy drzewa dla korzenia lokal begin iterator do wszyskich wezlow ktore sa dziecmi tego korzenia i dla tego znowu local begin i moge chodzic po poziomach 
@@ -39,6 +43,8 @@ int main()
 		SuffixTree suffixTree = SuffixTree(text+"$");
 		auto endTime = std::chrono::steady_clock::now();
 		std::cout << "Tree building time in seconds: " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - beginningTime).count() / 1000.0 << std::endl;
+	
+	
 	}
 	catch (std::runtime_error) {
 		

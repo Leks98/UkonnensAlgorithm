@@ -3,14 +3,13 @@
 #include <stdio.h>
 #include <string>
 #include "Node.h"
-
 class ActivePoint
 {
 private:
 	int activeEdge, activeLength;
 	Node* activeNode;
 public:
-	ActivePoint(Node* activeNode); 
+	ActivePoint(Node* activeNode);
 	~ActivePoint();
 	int getActiveEdge();
 	void setActiveEdge(int activeEdge);

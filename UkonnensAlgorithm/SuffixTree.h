@@ -4,6 +4,7 @@
 #include <string>
 #include "ActivePoint.h"
 #include <list>
+
 class SuffixTree
 {
 private:

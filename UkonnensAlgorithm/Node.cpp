@@ -6,9 +6,10 @@
 //#endif
 
 
-Node::Node(): from(-1), to(-1), suffixLink(nullptr), childrenArraySize(0), children(nullptr) {
+Node::Node(): from(-1), to(-1), suffixLink(nullptr), childrenArraySize(0), children(nullptr), parentNode(nullptr) {
 };
-Node::Node(int fromIndex, int toIndex) : from(fromIndex), to(toIndex), suffixLink(nullptr), childrenArraySize(0), children(nullptr) {
+
+Node::Node(int fromIndex, int toIndex, Node* parentNode) : from(fromIndex), to(toIndex), suffixLink(nullptr), childrenArraySize(0), children(nullptr), parentNode(parentNode) {
 };
 
 Node::~Node()
@@ -16,9 +17,11 @@ Node::~Node()
 	//delete this->suffixLink;
 		this->deleteChildrenArray();
 }
+
 int Node::getFromIndex() {
 	return this->from;
 }
+
 void Node::setFromIndex(int fromIndex) {
 	this->from = fromIndex;
 }
@@ -41,6 +44,36 @@ Node* Node::getNodeSuffixLink()
 void Node::setNodeSuffixLink(Node* suffixLink)
 {
 	this->suffixLink = suffixLink;
+}
+
+Node* Node::getLeftBrother()
+{
+	return this->leftBrother;
+}
+
+void Node::setLeftBrother(Node* leftBrother)
+{
+	this->leftBrother = leftBrother;
+}
+
+Node* Node::getRightBrother()
+{
+	return this->rightBrother;
+}
+
+void Node::setRightBrother(Node* rightBrother)
+{
+	this->rightBrother = rightBrother;
+}
+
+Node* Node::getParentNode()
+{
+	return this->parentNode;
+}
+
+void Node::setParentNode(Node* parentNode)
+{
+	this->parentNode = parentNode;
 }
 
 Node** Node::getNodeChildren()
@@ -81,7 +114,7 @@ void Node::addChildNodeByRange(const int fromIndex, const int toIndex)
 	this->children = increasedArray;
 	increasedArray = nullptr;
 	++this->childrenArraySize;
-	Node* childNode = new Node(fromIndex, toIndex);
+	Node* childNode = new Node(fromIndex, toIndex, this);
 	this->children[this->childrenArraySize - 1] = childNode;
 	//this->updateLastToIndexes(toIndex);
 }
@@ -105,6 +138,7 @@ void Node::addChildNode(Node* node)
 	this->children[this->childrenArraySize - 1] = node;
 	//this->updateLastToIndexes(node->getToIndex());
 }
+
 void Node::countNumberOfLeaves(int& number)
 {
 	if (this->childrenArraySize == 0) {
@@ -114,6 +148,7 @@ void Node::countNumberOfLeaves(int& number)
 		this->children[iter]->countNumberOfLeaves(number);
 	}
 }
+
 void Node::deleteChildNode(Node* node)
 {
 		Node** decreasedArray = new Node * [this->childrenArraySize - 1];
@@ -131,6 +166,7 @@ void Node::deleteChildNode(Node* node)
 		this->children = decreasedArray;
 		--this->childrenArraySize;
 }
+
 int Node::getChildrenArraySize()
 {
 	return this->childrenArraySize;
@@ -153,5 +189,33 @@ void Node::updateLastToIndexes(const int charIndex)
 			this->children[iter]->setToIndex(charIndex);
 		}
 	}
+}
+
+Node* Node::useDFSTraversing()
+{
+	if (this->childrenArraySize == 0) {
+		return this;
+	}
+	for (int iter = 0; iter < this->childrenArraySize; ++iter) {
+		this->children[iter]->useDFSTraversing();
+	}
+	
+}
+
+
+Node* Node::findNodeForPattern(const std::string& textToAnalyze, char pattern)
+{
+	for (int iter = this->getFromIndex(); iter < this->getToIndex(); ++iter) {
+		if (textToAnalyze[iter] == pattern) {
+			return this;
+		}
+	}	
+	for (int iter = 0; iter < this->getChildrenArraySize(); ++iter) {
+		Node* foundNode = this->getNodeChildren()[iter]->findNodeForPattern(textToAnalyze, pattern);
+		if (foundNode != nullptr) {
+			return foundNode;
+		}
+	}	
+	return nullptr;
 }
 

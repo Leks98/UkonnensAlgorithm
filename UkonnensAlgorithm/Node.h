@@ -11,11 +11,15 @@ private:
 	int childrenArraySize = 0;
 	int from, to;
 	Node* suffixLink;
+	Node* parentNode;
+	Node* leftBrother;
+	Node* rightBrother;
+
 private:
 	void deleteChildrenArray();
 public:
 	Node();
-	Node(int fromIndex, int toIndex);
+	Node(int fromIndex, int toIndex, Node* parentNode);
 	~Node();
 	int getFromIndex();
 	void setFromIndex(int fromIndex);
@@ -23,6 +27,12 @@ public:
 	void setToIndex(int toIndex);
 	Node* getNodeSuffixLink();
 	void setNodeSuffixLink(Node* suffixLink);
+	Node* getLeftBrother();
+	void setLeftBrother(Node* leftBrother);
+	Node* getRightBrother();
+	void setRightBrother(Node* rightBrother);
+	Node* getParentNode();
+	void setParentNode(Node* parentNode);
 	Node** getNodeChildren();
 	void setNodeChild(Node* child, int position);
 	int getLengthOfNode();
@@ -33,6 +43,8 @@ public:
 	int getChildrenArraySize();
 	Node* findNodeWithStartingChar(const std::string& textToAnalyze, char character);
 	void updateLastToIndexes(const int charIndex);
+	Node* useDFSTraversing();
+	Node* findNodeForPattern(const std::string& textToAnalyze, char pattern);
 };
 
 
