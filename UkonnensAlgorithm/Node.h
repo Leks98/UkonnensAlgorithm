@@ -31,9 +31,8 @@ public:
 	void setNodeChild(Node* child, int position);
 	int getLengthOfNode();
 	void addChildNodeByRangeBack(const int fromIndex, const int toIndex);
-	void deleteChildNode(Node* node);
 	void addChildNodeBack(Node* node);
-	void addInternalNodeFront(Node* node);
+	void addInternalNodeInSamePosition(Node* internalNode, Node*& nodeStartingWithCharToRemove);
 	void countNumberOfLeaves(int& number);
 	int getChildrenArraySize();
 	Node* findNodeWithStartingChar(const std::string& textToAnalyze, char character);

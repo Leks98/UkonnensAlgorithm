@@ -119,24 +119,19 @@ void Node::addChildNodeBack(Node* node)
 	//this->updateLastToIndexes(node->getToIndex());
 }
 
-void Node::addInternalNodeFront(Node* node)
+void Node::addInternalNodeInSamePosition(Node* internalNode, Node*& nodeStartingWithCharToRemove)
 {
-	Node** increasedArray = new Node * [this->childrenArraySize + 1];
 
-	//std::cout << *increasedArray;
-
-	for (int iter = 1; iter < childrenArraySize; ++iter)
+	for (int iter = 0; iter < childrenArraySize; ++iter)
 	{
-		
-		increasedArray[iter] = this->children[iter];
+		if (this->children[iter] == nodeStartingWithCharToRemove) {
+			this->children[iter] = nullptr;
+			this->children[iter] = internalNode;
+		}
+		else {
+			this->children[iter] = this->children[iter];
+		}
 	}
-	//memcpy(increasedArray, this->children, this->childrenArraySize * sizeof(Node*));
-	delete[] this->children;
-	this->children = increasedArray;
-	increasedArray = nullptr;
-	++this->childrenArraySize;
-	this->children[0] = node;
-	//this->updateLastToIndexes(node->getToIndex());
 }
 void Node::countNumberOfLeaves(int& number)
 {
@@ -146,24 +141,6 @@ void Node::countNumberOfLeaves(int& number)
 	for (int iter = 0; iter < this->childrenArraySize; ++iter) {
 		this->children[iter]->countNumberOfLeaves(number);
 	}
-}
-
-void Node::deleteChildNode(Node* node)
-{
-		Node** decreasedArray = new Node * [this->childrenArraySize - 1];
-		int tmp = 0;
-		for (int iter = 0; iter < this->childrenArraySize; ++iter)
-		{
-			if (this->children[iter] != node) {
-				decreasedArray[iter - tmp] = this->children[iter];
-			}
-			else {
-				++tmp;
-			}
-		}
-		delete[] this->children;
-		this->children = decreasedArray;
-		--this->childrenArraySize;
 }
 
 int Node::getChildrenArraySize()

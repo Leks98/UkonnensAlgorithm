@@ -118,19 +118,20 @@ void SuffixTree::build()
 						Node* nodeStartingWithChar = this->activePoint->getActiveNode()->findNodeWithStartingChar(this->textToAnalyze, textToAnalyze[this->activePoint->getActiveEdge()]);
 						int beginningFromIndex = nodeStartingWithChar->getFromIndex();
 						//nodeStartingWithChar->setToIndex(leafEnd);
-						nodeStartingWithChar->setFromIndex(beginningFromIndex + this->activePoint->getActiveLength());
+						
 						//nodeStartingWithChar->setToIndex(leafEnd);
 						Node* newInternalNode = new Node(beginningFromIndex, beginningFromIndex + this->activePoint->getActiveLength(),this->activePoint->getActiveNode());
 						Node* newLeafNode = new Node(position, leafEnd,newInternalNode);
 
 
 
-						this->activePoint->getActiveNode()->deleteChildNode(nodeStartingWithChar);
-						this->activePoint->getActiveNode()->addInternalNodeFront(newInternalNode);
+						//this->activePoint->getActiveNode()->deleteChildNode(nodeStartingWithChar);
+						this->activePoint->getActiveNode()->addInternalNodeInSamePosition(newInternalNode, nodeStartingWithChar);
+
 						nodeStartingWithChar->setParentNode(newInternalNode);
 						newInternalNode->addChildNodeBack(nodeStartingWithChar);
 						newInternalNode->addChildNodeBack(newLeafNode);
-
+						nodeStartingWithChar->setFromIndex(beginningFromIndex + this->activePoint->getActiveLength());
 						if (lastCreatedNodeInThisPhase != nullptr) {
 							lastCreatedNodeInThisPhase->setNodeSuffixLink(newInternalNode);
 						}
