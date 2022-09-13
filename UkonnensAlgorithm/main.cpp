@@ -15,7 +15,7 @@
 
 int main()
 {
-	FileService service("firstText.txt");
+	FileService service("secondText.txt");
 	/*int patternOccurrences = treeService.countOccurrencesOfPattern("c"); *///xxxx
 	//referencja zwraca cos np wskaznik lub iterator do tekstu co jest przed co jest za ta pozycja
 	
@@ -38,14 +38,23 @@ int main()
 		std::string text = service.readFile();
 		auto beginningTime = std::chrono::steady_clock::now();
 		//bwabwaewbwae$
-		//SuffixTreeService treeService(text+"$");
-		SuffixTree suffixTree = SuffixTree(text+"$");
-		auto endTime = std::chrono::steady_clock::now();
-		std::cout << "Tree building time in seconds: " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - beginningTime).count() / 1000.0 << std::endl;
+		SuffixTreeService treeService("sjsojoiajoiaww$");
+		bool x = treeService.checkIfPatternExist("jo");
+		int iloscWyst = treeService.countOccurrencesOfPattern("o");
+		SuffixTreeIterator* iterFirst = treeService.findFirstOccurrenceOfPattern("j");
+		SuffixTreeIterator* iterNext = treeService.findNextOccurrenceOfPattern();
+		iterNext = treeService.findNextOccurrenceOfPattern();
+		SuffixTreeIterator* iterPrev = treeService.findPreviousOccurrenceOfPattern();
+		SuffixTreeIterator* iterLast = treeService.findLastOccurrenceOfPattern("j");
+
+		SuffixTreeIterator* firstAlphaIter = treeService.findFirstNodeInAlphabeticalOrder();
+		//SuffixTree suffixTree = SuffixTree("abcdabh$");
+		//auto endTime = std::chrono::steady_clock::now();
+		//std::cout << "Tree building time in seconds: " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - beginningTime).count() / 1000.0 << std::endl;
 		
-		/*SuffixTreeIterator* iter = treeService.findFirstOccurrenceOfPattern("abcd");
-		SuffixTreeIterator* nextIter = treeService.findNextOccurrenceOfPattern("abca", treeService.lastNodeOfOccurrenceInPattern);*/
-		
+
+		/*SuffixTreeIterator* nextIter = treeService.findNextOccurrenceOfPattern("abca", treeService.lastNodeOfOccurrenceInPattern); */
+		int y;
 	}
 	catch (std::runtime_error) {
 		

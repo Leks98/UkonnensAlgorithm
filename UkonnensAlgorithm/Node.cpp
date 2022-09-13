@@ -198,20 +198,30 @@ void Node::updateAllLastToIndexes(const std::string& textToAnalyze, const int ch
 	}
 }
 
-Node* Node::useDFSTraversing(int& countEdgesLengthFromPatternEndToLeaf)
+Node* Node::useLeftDFSTraversing(int countEdgesLengthFromPatternEndToLeaf)
 {
 	if (this->childrenArraySize == 0) {
 		return this;
 	}
 	else{
 		countEdgesLengthFromPatternEndToLeaf += this->getToIndex() - this->getFromIndex();
-		return this->children[0]->useDFSTraversing(countEdgesLengthFromPatternEndToLeaf);
+		return this->children[0]->useLeftDFSTraversing(countEdgesLengthFromPatternEndToLeaf);
 	}
 	
 }
+Node* Node::useRightDFSTraversing(int countEdgesLengthFromPatternEndToLeaf)
+{
+	if (this->childrenArraySize == 0) {
+		return this;
+	}
+	else {
+		countEdgesLengthFromPatternEndToLeaf += this->getToIndex() - this->getFromIndex();
+		return this->children[this->getChildrenArraySize()-1]->useRightDFSTraversing(countEdgesLengthFromPatternEndToLeaf);
+	}
+}
 void Node::useUFSTraversing(Node* endingNodeOfPattern, int& countEdgesLengthFromPatternEndToLeaf)
 {
-	if (this!=nullptr && this->parentNode!=nullptr && this->parentNode != endingNodeOfPattern) {
+	if (this != endingNodeOfPattern) {
 		countEdgesLengthFromPatternEndToLeaf += this->getToIndex() - this->getFromIndex();
 		this->getParentNode()->useUFSTraversing(endingNodeOfPattern, countEdgesLengthFromPatternEndToLeaf);
 	}

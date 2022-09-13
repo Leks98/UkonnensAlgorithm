@@ -38,9 +38,9 @@ public:
 	Node* findNodeWithStartingChar(const std::string& textToAnalyze, char character);
 	void updateLastToIndexes(const std::string& textToAnalyze, const int charIndex);
 	void updateAllLastToIndexes(const std::string& textToAnalyze, const int charIndex, Node*& lastUpdatedLeaf);
-	Node* useDFSTraversing(int& countEdgesLengthFromPatternEndToLeaf);
+	Node* useLeftDFSTraversing(int countEdgesLengthFromPatternEndToLeaf = 0);
+	Node* useRightDFSTraversing(int countEdgesLengthFromPatternEndToLeaf = 0);
 	void useUFSTraversing(Node* endingNodeOfPattern, int& countEdgesLengthFromPatternEndToLeaf);
 	Node* findNodeForPattern(const std::string& textToAnalyze, char pattern);
 };
-
 

@@ -7,23 +7,31 @@ class SuffixTreeService
 {
 private:
 	std::string textToAnalyze;
+	std::string pattern;
 	SuffixTree* tree;
 	using iterator = SuffixTreeIterator*;
-	Node* lastNodeInAlphaOrder;
-	int indexOfNodeInPattern;
-	int occurrencesOfPattern;
-	int distanceBetweenLeafAndNodePattern;
+	char lastLetterInAlphaOrder;
+	int positionWherePatternFinishedFromBeginningOfEndingNode;
 	Node* endingNodeOfPattern;
+	Node* mostLeftLeafNodeInPatternPath;
+	Node* mostRightLeafNodeInPatternPath;
+	Node* currentOccurrence;
+	Node* lastNodeInAlphaOrder;
+	void setBorder(const std::string& pattern);
+	iterator getIteratorOfOccurrence(const std::string& pattern);
 public:
-	Node* lastNodeOfOccurrenceInPattern;
 	SuffixTreeService(const std::string& textToAnalyze);
 	~SuffixTreeService();
-	bool exists(Node* searchingNode, const std::string pattern, int patternIdx);
+	//ukryc node'a wewnatrz, przekazujemy inny rodzaj iteratora 
 	bool checkIfPatternExist(const std::string& pattern);
+
 	int countOccurrencesOfPattern(const std::string& pattern);
-	void counts(Node* searchingNode, const std::string& pattern, int patternIdx);
-	iterator findFirstOccurrenceOfPattern(const std::string& pattern, int patternIdx = 0, Node* searchingNode = nullptr);
-	iterator findNextOccurrenceOfPattern(const std::string& pattern, Node* searchingNode = nullptr);
-	iterator findNodeInAlphabeticalOrder(Node* node, int lengthOfEdgesFromAlphaLetterToLeaf = 0);
+	iterator findFirstOccurrenceOfPattern(const std::string& pattern); //wszystkie funkcje w kontenerach powinny byc typu size_t
+	iterator findNextOccurrenceOfPattern();
+	iterator findPreviousOccurrenceOfPattern();
+	iterator findLastOccurrenceOfPattern(const std::string& pattern);
+	iterator findFirstNodeInAlphabeticalOrder();
+	iterator findNextNodeInAlphabeticalOrder();
+	//find zwracq pierwsze wystapienie 
 };
 
