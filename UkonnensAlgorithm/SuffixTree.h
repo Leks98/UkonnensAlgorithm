@@ -12,6 +12,7 @@ private:
 	ActivePoint* activePoint;
 	int remaining;
 	Node* pRoot;
+	Node* lastUpdatedLeaf;
 
 public:
 	SuffixTree(const std::string& textToAnalize);

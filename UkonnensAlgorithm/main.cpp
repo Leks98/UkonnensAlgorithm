@@ -16,9 +16,7 @@
 int main()
 {
 	FileService service("secondText.txt");
-/*	SuffixTreeService treeService("b");
-	bool patternExists = treeService.checkIfPatternExist("cabag");
-	int patternOccurrences = treeService.countOccurrencesOfPattern("c"); *///xxxx
+	/*int patternOccurrences = treeService.countOccurrencesOfPattern("c"); *///xxxx
 	//referencja zwraca cos np wskaznik lub iterator do tekstu co jest przed co jest za ta pozycja
 	
 
@@ -40,11 +38,16 @@ int main()
 		std::string text = service.readFile();
 		auto beginningTime = std::chrono::steady_clock::now();
 		//bwabwaewbwae$
-		SuffixTree suffixTree = SuffixTree(text+"$");
-		auto endTime = std::chrono::steady_clock::now();
-		std::cout << "Tree building time in seconds: " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - beginningTime).count() / 1000.0 << std::endl;
-	
-	
+		SuffixTreeService treeService("abcab$");
+		//SuffixTree suffixTree = SuffixTree("abcab$");
+		//auto endTime = std::chrono::steady_clock::now();
+		//std::cout << "Tree building time in seconds: " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - beginningTime).count() / 1000.0 << std::endl;
+		
+		SuffixTreeIterator* iter = treeService.findFirstOccurrenceOfPattern("abcd");
+		SuffixTreeIterator* nextIter = treeService.findNextOccurrenceOfPattern("abca", treeService.lastNodeOfOccurrenceInPattern);
+		int x = 8;
+		//std::cout << x;
+		
 	}
 	catch (std::runtime_error) {
 		

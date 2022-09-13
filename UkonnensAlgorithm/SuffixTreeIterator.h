@@ -18,11 +18,11 @@ public:
 	~SuffixTreeIterator();
 	//SuffixTreeIterator(const SuffixTreeIterator&) = default;
 	SuffixTreeIterator() = default;
-	//SuffixTreeIterator(valueType fromIndex, valueType toIndex);
+	SuffixTreeIterator(valueType fromIndex, valueType toIndex);
 
 	referenceType operator*() const;
 	pointerType operator->();
-	SuffixTreeIterator(/*SuffixTreeService service*/ valueType fromIndex, valueType toIndex); 
+	//SuffixTreeIterator(/*SuffixTreeService service*/ valueType fromIndex, valueType toIndex); 
 
 	SuffixTreeIterator& operator ++();
 	SuffixTreeIterator operator ++(int);

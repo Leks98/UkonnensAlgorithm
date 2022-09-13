@@ -7,13 +7,11 @@
 class Node
 {
 private: 
-	Node** children;
-	int childrenArraySize = 0;
+	Node** children; //lub bracia lewy prawy 
+	int childrenArraySize = 0; //
 	int from, to;
 	Node* suffixLink;
 	Node* parentNode;
-	Node* leftBrother;
-	Node* rightBrother;
 
 private:
 	void deleteChildrenArray();
@@ -27,23 +25,22 @@ public:
 	void setToIndex(int toIndex);
 	Node* getNodeSuffixLink();
 	void setNodeSuffixLink(Node* suffixLink);
-	Node* getLeftBrother();
-	void setLeftBrother(Node* leftBrother);
-	Node* getRightBrother();
-	void setRightBrother(Node* rightBrother);
 	Node* getParentNode();
 	void setParentNode(Node* parentNode);
 	Node** getNodeChildren();
 	void setNodeChild(Node* child, int position);
 	int getLengthOfNode();
-	void addChildNodeByRange(const int fromIndex, const int toIndex);
+	void addChildNodeByRangeBack(const int fromIndex, const int toIndex);
 	void deleteChildNode(Node* node);
-	void addChildNode(Node* node);
+	void addChildNodeBack(Node* node);
+	void addInternalNodeFront(Node* node);
 	void countNumberOfLeaves(int& number);
 	int getChildrenArraySize();
 	Node* findNodeWithStartingChar(const std::string& textToAnalyze, char character);
-	void updateLastToIndexes(const int charIndex);
-	Node* useDFSTraversing();
+	void updateLastToIndexes(const std::string& textToAnalyze, const int charIndex);
+	void updateAllLastToIndexes(const std::string& textToAnalyze, const int charIndex, Node*& lastUpdatedLeaf);
+	Node* useDFSTraversing(int& countEdgesLengthFromPatternEndToLeaf);
+	void useUFSTraversing(Node* endingNodeOfPattern, int& countEdgesLengthFromPatternEndToLeaf);
 	Node* findNodeForPattern(const std::string& textToAnalyze, char pattern);
 };
 

@@ -46,26 +46,6 @@ void Node::setNodeSuffixLink(Node* suffixLink)
 	this->suffixLink = suffixLink;
 }
 
-Node* Node::getLeftBrother()
-{
-	return this->leftBrother;
-}
-
-void Node::setLeftBrother(Node* leftBrother)
-{
-	this->leftBrother = leftBrother;
-}
-
-Node* Node::getRightBrother()
-{
-	return this->rightBrother;
-}
-
-void Node::setRightBrother(Node* rightBrother)
-{
-	this->rightBrother = rightBrother;
-}
-
 Node* Node::getParentNode()
 {
 	return this->parentNode;
@@ -99,7 +79,7 @@ void Node::deleteChildrenArray()
 	delete[] this->children;
 }
 
-void Node::addChildNodeByRange(const int fromIndex, const int toIndex)
+void Node::addChildNodeByRangeBack(const int fromIndex, const int toIndex)
 {
 	Node** increasedArray = new Node*[this->childrenArraySize + 1];
 
@@ -119,7 +99,7 @@ void Node::addChildNodeByRange(const int fromIndex, const int toIndex)
 	//this->updateLastToIndexes(toIndex);
 }
 
-void Node::addChildNode(Node* node)
+void Node::addChildNodeBack(Node* node)
 {
 	Node** increasedArray = new Node * [this->childrenArraySize + 1];
 
@@ -139,6 +119,25 @@ void Node::addChildNode(Node* node)
 	//this->updateLastToIndexes(node->getToIndex());
 }
 
+void Node::addInternalNodeFront(Node* node)
+{
+	Node** increasedArray = new Node * [this->childrenArraySize + 1];
+
+	//std::cout << *increasedArray;
+
+	for (int iter = 1; iter < childrenArraySize; ++iter)
+	{
+		
+		increasedArray[iter] = this->children[iter];
+	}
+	//memcpy(increasedArray, this->children, this->childrenArraySize * sizeof(Node*));
+	delete[] this->children;
+	this->children = increasedArray;
+	increasedArray = nullptr;
+	++this->childrenArraySize;
+	this->children[0] = node;
+	//this->updateLastToIndexes(node->getToIndex());
+}
 void Node::countNumberOfLeaves(int& number)
 {
 	if (this->childrenArraySize == 0) {
@@ -182,26 +181,64 @@ Node* Node::findNodeWithStartingChar(const std::string& textToAnalyze, char char
 	return nullptr;
 }
 
-void Node::updateLastToIndexes(const int charIndex)
+void Node::updateLastToIndexes(const std::string& textToAnalyze, const int charIndex)
 {
-	for (int iter = 0; iter < this->childrenArraySize; ++iter) {
-		if (this->children[iter]->childrenArraySize ==0) {
-			this->children[iter]->setToIndex(charIndex);
+	if (this->childrenArraySize > 0) {
+		for (int iter = 0; iter < this->childrenArraySize; ++iter) {
+			if (this->children[iter]->childrenArraySize == 0) {
+				this->children[iter]->setToIndex(charIndex);
+			}
+		}
+	}
+	else {
+		this->setToIndex(charIndex);
+	}
+}
+
+void Node::updateAllLastToIndexes(const std::string& textToAnalyze, const int charIndex, Node*& lastUpdatedLeaf)
+{
+	if (this->childrenArraySize > 0) {
+		for (int iter = 0; iter < this->childrenArraySize; ++iter) {
+			this->getNodeChildren()[iter]->updateAllLastToIndexes(textToAnalyze, charIndex, lastUpdatedLeaf);
+		}
+	}
+	else {
+		this->setToIndex(charIndex);
+		if (textToAnalyze[charIndex-1] == '$') {
+			(this)->children = new Node * [2];
+			if (lastUpdatedLeaf == nullptr) {
+				(this)->children[0] = nullptr;
+				(this)->children[1] = nullptr;
+			}
+			else {
+				lastUpdatedLeaf->children[1] = this;
+				(this)->children[0] = lastUpdatedLeaf;
+				(this)->children[1] = nullptr;
+			}
+			lastUpdatedLeaf = this;
+
 		}
 	}
 }
 
-Node* Node::useDFSTraversing()
+Node* Node::useDFSTraversing(int& countEdgesLengthFromPatternEndToLeaf)
 {
 	if (this->childrenArraySize == 0) {
 		return this;
 	}
-	for (int iter = 0; iter < this->childrenArraySize; ++iter) {
-		this->children[iter]->useDFSTraversing();
+	else{
+		countEdgesLengthFromPatternEndToLeaf += this->getToIndex() - this->getFromIndex();
+		return this->children[0]->useDFSTraversing(countEdgesLengthFromPatternEndToLeaf);
 	}
 	
 }
-
+void Node::useUFSTraversing(Node* endingNodeOfPattern, int& countEdgesLengthFromPatternEndToLeaf)
+{
+	if (this!=nullptr && this->parentNode!=nullptr && this->parentNode != endingNodeOfPattern) {
+		countEdgesLengthFromPatternEndToLeaf += this->getToIndex() - this->getFromIndex();
+		this->getParentNode()->useUFSTraversing(endingNodeOfPattern, countEdgesLengthFromPatternEndToLeaf);
+	}
+}
 
 Node* Node::findNodeForPattern(const std::string& textToAnalyze, char pattern)
 {

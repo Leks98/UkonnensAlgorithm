@@ -8,10 +8,10 @@ SuffixTreeIterator::SuffixTreeIterator(valueType fromIndex, valueType toIndex): 
 {
 }
 
-SuffixTreeIterator::referenceType SuffixTreeIterator::operator*() const
-{
-	//return *this;
-}
+//SuffixTreeIterator::referenceType SuffixTreeIterator::operator*() const
+//{
+//	//return *this;
+//}
 
 SuffixTreeIterator::pointerType SuffixTreeIterator::operator->()
 {
@@ -22,29 +22,29 @@ SuffixTreeIterator::pointerType SuffixTreeIterator::operator->()
 //{
 //}
 
-SuffixTreeIterator& SuffixTreeIterator::operator++()
-{
-	//this = iterator = service.findNextOccurrenceOfPattern(service->, const T & pattern, int patternIdx);
-	//return *this;
-}
+//SuffixTreeIterator& SuffixTreeIterator::operator++()
+//{
+//	//this = iterator = service.findNextOccurrenceOfPattern(service->, const T & pattern, int patternIdx);
+//	//return *this;
+//}
+//
+//SuffixTreeIterator SuffixTreeIterator::operator++(int)
+//{
+//	//SuffixTreeIterator iterator = *this;
+//	//iterator = service.findNextOccurrenceOfPattern(Node * searchingNode, const T & pattern, int patternIdx);
+//	////++(*this);
+//	//return iterator;
+//}
 
-SuffixTreeIterator SuffixTreeIterator::operator++(int)
-{
-	//SuffixTreeIterator iterator = *this;
-	//iterator = service.findNextOccurrenceOfPattern(Node * searchingNode, const T & pattern, int patternIdx);
-	////++(*this);
-	//return iterator;
-}
-
-SuffixTreeIterator& SuffixTreeIterator::operator--()
-{
-	// TODO: insert return statement here
-}
-
-SuffixTreeIterator SuffixTreeIterator::operator--(int)
-{
-	/*return SuffixTreeIterator();*/
-}
+//SuffixTreeIterator& SuffixTreeIterator::operator--()
+//{
+//	// TODO: insert return statement here
+//}
+//
+//SuffixTreeIterator SuffixTreeIterator::operator--(int)
+//{
+//	/*return SuffixTreeIterator();*/
+//}
 
 bool SuffixTreeIterator::operator==(const SuffixTreeIterator& other) const
 {
