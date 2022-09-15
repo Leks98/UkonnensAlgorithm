@@ -1,11 +1,4 @@
 #include "SuffixTree.h"
-//#ifdef _DEBUG
-//#define new new( 16, __FILE__ , __LINE__ )
-//#else
-//#define new new
-//#endif
-
-
 SuffixTree::SuffixTree(const std::string& textToAnalize):
 	textToAnalyze(textToAnalize),
 	remaining(0),
@@ -74,11 +67,15 @@ void SuffixTree::moveDown(int position, int leafEnd)
 	
 }
 
+const std::string& SuffixTree::getTextToAnalyze()
+{
+	return this->textToAnalyze;
+}
+
 void SuffixTree::build()
 {
 	int position = 0;
 	int leafEnd = position;
-	//usunac wskazniki
 	while (position < this->textToAnalyze.length()) {
 		leafEnd++;
 		this->activePoint->getActiveNode()->updateLastToIndexes(this->textToAnalyze, leafEnd);
@@ -92,14 +89,12 @@ void SuffixTree::build()
 				if (selectNode(position) != nullptr) {
 
 					this->activePoint->setActiveEdge(selectNode(position)->getFromIndex());
-					//this->activePoint->setActiveNode(selectNode(position));
 					this->activePoint->increaseActiveLength();
 					selectNode(position)->updateLastToIndexes(this->textToAnalyze, leafEnd);
 					break;
 				}
 				else {
 					this->activePoint->getActiveNode()->addChildNodeByRangeBack(position, leafEnd);
-					//this->activePoint->getActiveNode()->updateLastToIndexes(this->textToAnalyze, leafEnd);
 					this->remaining--;
 				}
 			}
@@ -117,15 +112,10 @@ void SuffixTree::build()
 
 						Node* nodeStartingWithChar = this->activePoint->getActiveNode()->findNodeWithStartingChar(this->textToAnalyze, textToAnalyze[this->activePoint->getActiveEdge()]);
 						int beginningFromIndex = nodeStartingWithChar->getFromIndex();
-						//nodeStartingWithChar->setToIndex(leafEnd);
-						
-						//nodeStartingWithChar->setToIndex(leafEnd);
 						Node* newInternalNode = new Node(beginningFromIndex, beginningFromIndex + this->activePoint->getActiveLength(),this->activePoint->getActiveNode());
 						Node* newLeafNode = new Node(position, leafEnd,newInternalNode);
 
 
-
-						//this->activePoint->getActiveNode()->deleteChildNode(nodeStartingWithChar);
 						this->activePoint->getActiveNode()->addInternalNodeInSamePosition(newInternalNode, nodeStartingWithChar);
 
 						nodeStartingWithChar->setParentNode(newInternalNode);
@@ -187,5 +177,4 @@ void SuffixTree::build()
 
 	}
 	pRoot->updateAllLastToIndexes(textToAnalyze, position, this->lastUpdatedLeaf);
-	int nodeIndex = 0;
 }

@@ -4,7 +4,6 @@ ActivePoint::ActivePoint(Node* activeNode): activeEdge(-1), activeLength(0), act
 
 ActivePoint::~ActivePoint()
 {
-	//delete activeNode;
 }
 
 int ActivePoint::getActiveEdge()

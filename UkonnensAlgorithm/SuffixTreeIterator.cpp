@@ -1,50 +1,86 @@
 #include "SuffixTreeIterator.h"
 
+SuffixTreeIterator::SuffixTreeIterator(SuffixTreeService* service)
+{
+	this->service = service;
+}
+
+SuffixTreeIterator::SuffixTreeIterator() : fromIndex(-1), toIndex(-1)
+{
+}
+
 SuffixTreeIterator::~SuffixTreeIterator()
 {
 }
 
-SuffixTreeIterator::SuffixTreeIterator(valueType fromIndex, valueType toIndex): /*service(nullptr),*/ fromIndex(fromIndex), toIndex(toIndex)
+SuffixTreeIterator::SuffixTreeIterator(SuffixTreeService* service, valueType fromIndex, valueType toIndex) : fromIndex(fromIndex), toIndex(toIndex)
 {
+	this->service = service;
 }
 
-//SuffixTreeIterator::referenceType SuffixTreeIterator::operator*() const
-//{
-//	//return *this;
-//}
-
-SuffixTreeIterator::pointerType SuffixTreeIterator::operator->()
+SuffixTreeIterator SuffixTreeIterator::find(const std::string& pattern)
 {
-	return pointerType();
+	if (service->checkIfPatternExist(pattern) == true) {
+		int fromIndex = service->getEndingNodeOfPattern()->getFromIndex() - (pattern.length() - service->getPositionWherePatternFinishedFromBeginningOfEndingNode());
+		int toIndex = fromIndex + pattern.length();
+		service->setBorder(pattern);
+		service->setPattern(pattern);
+		service->setCurrentOccurrence(service->getMostLeftLeafNodeInPatternPath());
+		return SuffixTreeIterator(service,fromIndex, toIndex);
+	}
+	else {
+		return SuffixTreeIterator();
+	}
 }
 
-//SuffixTreeIterator::SuffixTreeIterator(/*SuffixTreeService service,*/ valueType fromIndex, valueType toIndex): /*service(service),*/ fromIndex(fromIndex), toIndex(toIndex)
-//{
-//}
+SuffixTreeIterator SuffixTreeIterator::findLast(const std::string& pattern)
+{
+	service->setPattern(pattern);
+	if (service->checkIfPatternExist(pattern) == true) {
+		service->setBorder(pattern);
+		service->setCurrentOccurrence(service->getMostRightLeafNodeInPatternPath());
+		SuffixTreeIterator iterator = getIteratorOfOccurrence(pattern);
+		return SuffixTreeIterator(iterator.service,iterator.fromIndex, iterator.toIndex);
+	}
+	else {
+		return SuffixTreeIterator();
+	}
+}
 
-//SuffixTreeIterator& SuffixTreeIterator::operator++()
-//{
-//	//this = iterator = service.findNextOccurrenceOfPattern(service->, const T & pattern, int patternIdx);
-//	//return *this;
-//}
-//
-//SuffixTreeIterator SuffixTreeIterator::operator++(int)
-//{
-//	//SuffixTreeIterator iterator = *this;
-//	//iterator = service.findNextOccurrenceOfPattern(Node * searchingNode, const T & pattern, int patternIdx);
-//	////++(*this);
-//	//return iterator;
-//}
+SuffixTreeIterator SuffixTreeIterator::operator*() const
+{
+	return *this;
+}
 
-//SuffixTreeIterator& SuffixTreeIterator::operator--()
-//{
-//	// TODO: insert return statement here
-//}
-//
-//SuffixTreeIterator SuffixTreeIterator::operator--(int)
-//{
-//	/*return SuffixTreeIterator();*/
-//}
+
+SuffixTreeIterator SuffixTreeIterator::operator++(int)
+{
+	SuffixTreeIterator iterator = *this;
+	if (service->getCurrentOccurrence() == service->getMostRightLeafNodeInPatternPath()) {
+		service->setMostLeftLeafNodeInPatternPath(nullptr);
+		service->setMostRightLeafNodeInPatternPath(nullptr);
+		service->setCurrentOccurrence(nullptr);
+		return SuffixTreeIterator();
+	}
+	else {
+		service->setCurrentOccurrence(service->getCurrentOccurrence()->getNodeChildren()[1]);
+		iterator = getIteratorOfOccurrence(service->getPattern());
+		return iterator;
+	}
+}
+
+SuffixTreeIterator SuffixTreeIterator::operator--(int)
+{
+	SuffixTreeIterator iterator = *this;
+	if (service->getCurrentOccurrence() == service->getMostLeftLeafNodeInPatternPath()) {
+		return SuffixTreeIterator();
+	}
+	else {
+		service->setCurrentOccurrence(service->getCurrentOccurrence()->getNodeChildren()[0]);
+		iterator = getIteratorOfOccurrence(service->getPattern());
+		return iterator;
+	}
+}
 
 bool SuffixTreeIterator::operator==(const SuffixTreeIterator& other) const
 {
@@ -56,15 +92,17 @@ bool SuffixTreeIterator::operator!=(const SuffixTreeIterator& other) const
 {
 	return !(*this == other);
 }
-
-
-SuffixTreeIterator::valueType SuffixTreeIterator::getToIndex()
+SuffixTreeIterator SuffixTreeIterator::getIteratorOfOccurrence(const std::string& pattern)
 {
-	return toIndex;
-}
+	if ((service->getCurrentOccurrence() == service->getEndingNodeOfPattern()) || (service->getCurrentOccurrence()->getParentNode() == service->getTree()->getRoot())) {
+		service->setCurrentOccurrence(nullptr);
+		return SuffixTreeIterator();
+	}
+	int countEdgesLengthFromPatternEndToLeaf = 0;
+	service->getCurrentOccurrence()->getParentNode()->useUFSTraversing(service->getEndingNodeOfPattern(), countEdgesLengthFromPatternEndToLeaf);
+	countEdgesLengthFromPatternEndToLeaf += (service->getEndingNodeOfPattern()->getToIndex() - service->getEndingNodeOfPattern()->getFromIndex() - service->getPositionWherePatternFinishedFromBeginningOfEndingNode());
 
-void SuffixTreeIterator::goThroughTreeInAlphabeticalOrder(Node* node)
-{
+	int fromIndex = service->getCurrentOccurrence()->getFromIndex() - countEdgesLengthFromPatternEndToLeaf - pattern.length();
+	int toIndex = fromIndex + pattern.length();
+	return SuffixTreeIterator(service,fromIndex, toIndex);
 }
-
- 

@@ -1,11 +1,4 @@
 #include "Node.h"
-//#ifdef _DEBUG
-//#define new new(16, __FILE__ , __LINE__ )
-//#else
-//#define new new
-//#endif
-
-
 Node::Node(): from(-1), to(-1), suffixLink(nullptr), childrenArraySize(0), children(nullptr), parentNode(nullptr) {
 };
 
@@ -14,7 +7,6 @@ Node::Node(int fromIndex, int toIndex, Node* parentNode) : from(fromIndex), to(t
 
 Node::~Node()
 {
-	//delete this->suffixLink;
 		this->deleteChildrenArray();
 }
 
@@ -83,12 +75,6 @@ void Node::addChildNodeByRangeBack(const int fromIndex, const int toIndex)
 {
 	Node** increasedArray = new Node*[this->childrenArraySize + 1];
 
-	//std::cout << *increasedArray;
-	
-	//for (int iter = 0; iter < childrenArraySize; ++iter)
-	//{
-	//	increasedArray[iter] = this->children[iter];
-	//}
 	memcpy(increasedArray, this->children, this->childrenArraySize * sizeof(Node*));
 	delete[] this->children;
 	this->children = increasedArray;
@@ -96,32 +82,22 @@ void Node::addChildNodeByRangeBack(const int fromIndex, const int toIndex)
 	++this->childrenArraySize;
 	Node* childNode = new Node(fromIndex, toIndex, this);
 	this->children[this->childrenArraySize - 1] = childNode;
-	//this->updateLastToIndexes(toIndex);
 }
 
 void Node::addChildNodeBack(Node* node)
 {
 	Node** increasedArray = new Node * [this->childrenArraySize + 1];
 
-	//std::cout << *increasedArray;
-
-	//for (int iter = 0; iter < childrenArraySize; ++iter)
-	//{
-	//	
-	//	increasedArray[iter] = this->children[iter];
-	//}
 	memcpy(increasedArray, this->children, this->childrenArraySize * sizeof(Node*));
 	delete[] this->children;
 	this->children = increasedArray;
 	increasedArray = nullptr;
 	++this->childrenArraySize;
 	this->children[this->childrenArraySize - 1] = node;
-	//this->updateLastToIndexes(node->getToIndex());
 }
 
 void Node::addInternalNodeInSamePosition(Node* internalNode, Node*& nodeStartingWithCharToRemove)
 {
-
 	for (int iter = 0; iter < childrenArraySize; ++iter)
 	{
 		if (this->children[iter] == nodeStartingWithCharToRemove) {
@@ -181,7 +157,7 @@ void Node::updateAllLastToIndexes(const std::string& textToAnalyze, const int ch
 	}
 	else {
 		this->setToIndex(charIndex);
-		if (textToAnalyze[charIndex-1] == '$') {
+		if (textToAnalyze[charIndex-1] == '€') {
 			(this)->children = new Node * [2];
 			if (lastUpdatedLeaf == nullptr) {
 				(this)->children[0] = nullptr;
@@ -226,20 +202,3 @@ void Node::useUFSTraversing(Node* endingNodeOfPattern, int& countEdgesLengthFrom
 		this->getParentNode()->useUFSTraversing(endingNodeOfPattern, countEdgesLengthFromPatternEndToLeaf);
 	}
 }
-
-Node* Node::findNodeForPattern(const std::string& textToAnalyze, char pattern)
-{
-	for (int iter = this->getFromIndex(); iter < this->getToIndex(); ++iter) {
-		if (textToAnalyze[iter] == pattern) {
-			return this;
-		}
-	}	
-	for (int iter = 0; iter < this->getChildrenArraySize(); ++iter) {
-		Node* foundNode = this->getNodeChildren()[iter]->findNodeForPattern(textToAnalyze, pattern);
-		if (foundNode != nullptr) {
-			return foundNode;
-		}
-	}	
-	return nullptr;
-}
-

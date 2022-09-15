@@ -3,58 +3,73 @@
 #include<string>
 #include<chrono>
 #include "FileService.h"
-#include "SuffixTree.h"
 #include <stdlib.h>  
 #include <crtdbg.h> 
-#ifdef _DEBUG
-#define new new( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-#else
-#define new new
-#endif
-#include "SuffixTreeService.h"
+#include"SuffixTreeIterator.h"
+#include"AlphabeticalOrderIterator.h"
 
 int main()
 {
-	FileService service("secondText.txt");
-	/*int patternOccurrences = treeService.countOccurrencesOfPattern("c"); *///xxxx
-	//referencja zwraca cos np wskaznik lub iterator do tekstu co jest przed co jest za ta pozycja
-	
-
-
-	//findPattern zwraca iterator do pierwszego wystapienia slowa ++ do kolejnego slowa
-
-	//findFirst/FindLast
-	//szablon parametryzowany typ 
-	
-	//-- find Last
-
-	//iterator umozliwiajacy przejscie przez wszytskie sufiksyw porzadku leksykograficznym 
-	//iterator w porzadku leksyograficnzym ale dla poddrzewa
-	//jaki jest rozmiar poddrzewa
-	//reczne nawigowanie po drzewie poziomy drzewa dla korzenia lokal begin iterator do wszyskich wezlow ktore sa dziecmi tego korzenia i dla tego znowu local begin i moge chodzic po poziomach 
-
-
+	FileService service("test3.txt");
 	try {
 		std::string text = service.readFile();
-		auto beginningTime = std::chrono::steady_clock::now();
-		//bwabwaewbwae$
-		SuffixTreeService treeService("sjsojoiajoiaww$");
-		bool x = treeService.checkIfPatternExist("jo");
-		int iloscWyst = treeService.countOccurrencesOfPattern("o");
-		SuffixTreeIterator* iterFirst = treeService.findFirstOccurrenceOfPattern("j");
-		SuffixTreeIterator* iterNext = treeService.findNextOccurrenceOfPattern();
-		iterNext = treeService.findNextOccurrenceOfPattern();
-		SuffixTreeIterator* iterPrev = treeService.findPreviousOccurrenceOfPattern();
-		SuffixTreeIterator* iterLast = treeService.findLastOccurrenceOfPattern("j");
 
-		SuffixTreeIterator* firstAlphaIter = treeService.findFirstNodeInAlphabeticalOrder();
-		//SuffixTree suffixTree = SuffixTree("abcdabh$");
-		//auto endTime = std::chrono::steady_clock::now();
-		//std::cout << "Tree building time in seconds: " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime - beginningTime).count() / 1000.0 << std::endl;
+
+		auto start = std::chrono::steady_clock::now();
+		SuffixTreeService* treeService = new SuffixTreeService(text + "€");
+		auto end = std::chrono::steady_clock::now();
+		std::cout << "Tree building time in seconds: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000.0 << std::endl;
+
+		start = std::chrono::steady_clock::now();
+		int countElektro = treeService->countOccurrencesOfPattern("elektro");
+		end = std::chrono::steady_clock::now();
+		std::cout << "Counted " << countElektro << " 'elektro' words in " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << " microseconds" << std::endl;
 		
+		start = std::chrono::steady_clock::now();
+		int countStrzelone = treeService->countOccurrencesOfPattern("strzelone");
+		end = std::chrono::steady_clock::now();
+		std::cout << "Counted " << countStrzelone << " 'strzelo' words in " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << " microseconds" << std::endl;
 
-		/*SuffixTreeIterator* nextIter = treeService.findNextOccurrenceOfPattern("abca", treeService.lastNodeOfOccurrenceInPattern); */
-		int y;
+		start = std::chrono::steady_clock::now();
+		bool checkIfwsedrftgyqExists = treeService->checkIfPatternExist("wsedrftgyq");
+		end = std::chrono::steady_clock::now();
+		std::cout << "Word 'wsedrftgyq'" << (checkIfwsedrftgyqExists ? " exists " : " do not exist ") << " in text. Found in: " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << " microseconds" << std::endl;
+
+		start = std::chrono::steady_clock::now();
+		bool checkIfArowExists = treeService->checkIfPatternExist("arow");
+		end = std::chrono::steady_clock::now();
+		std::cout << "Word 'arow'" << (checkIfArowExists ? " exists " : " do not exist ") << " in text. Found in: " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << " microseconds" << std::endl;
+
+		start = std::chrono::steady_clock::now();
+		SuffixTreeIterator iter = SuffixTreeIterator(treeService);
+		SuffixTreeIterator iterFirst = iter.find("elek");	
+		end = std::chrono::steady_clock::now();
+		std::cout << "Iterator pointing to first word 'elek' found in " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << " microseconds" << std::endl;
+
+		start = std::chrono::steady_clock::now();
+		SuffixTreeIterator iterNext = iterFirst++;
+		end = std::chrono::steady_clock::now();
+		std::cout << "Iterator pointing to next word 'elek' found in " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << " microseconds" << std::endl;
+
+		start = std::chrono::steady_clock::now();
+		SuffixTreeIterator iterPrev = iterNext--;
+		end = std::chrono::steady_clock::now();
+		std::cout << "Iterator pointing to previous word 'elek' found in " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << " microseconds" << std::endl;
+
+
+		AlphabeticalOrderIterator alphaIter = AlphabeticalOrderIterator(treeService->getTree());
+
+		start = std::chrono::steady_clock::now();
+		AlphabeticalOrderIterator firstAlphaIter = alphaIter.find();
+		end = std::chrono::steady_clock::now();
+		std::cout << "Iterator pointing to first word in alphabetical order found in " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << " microseconds" << std::endl;
+
+		start = std::chrono::steady_clock::now();
+		AlphabeticalOrderIterator nextAlphaIter = firstAlphaIter++;
+		end = std::chrono::steady_clock::now();
+		std::cout << "Iterator pointing to next word in alphabetical order found in " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << " microseconds" << std::endl;
+
+		delete treeService;
 	}
 	catch (std::runtime_error) {
 		

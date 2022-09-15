@@ -18,12 +18,13 @@ public:
 	SuffixTree(const std::string& textToAnalize);
 	Node* getRoot();
 	~SuffixTree();
-
+	const std::string& getTextToAnalyze();
 private:
 	void build();
 	Node* selectNode(int index);
 	char findNextCharacterInActiveNode(int position, int leafEnd);
 	void moveDown(int position, int leafEnd);
+
 };
 
 

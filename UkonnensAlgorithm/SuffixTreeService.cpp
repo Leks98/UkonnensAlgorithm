@@ -11,24 +11,79 @@ void SuffixTreeService::setBorder(const std::string& pattern)
 	}
 }
 
-SuffixTreeIterator* SuffixTreeService::getIteratorOfOccurrence(const std::string& pattern)
-{
-	if ((this->currentOccurrence == this->endingNodeOfPattern) || (this->currentOccurrence->getParentNode() == tree->getRoot())) {
-		this->currentOccurrence = nullptr;
-		return nullptr;
-	}
-	int countEdgesLengthFromPatternEndToLeaf = 0;
-	this->currentOccurrence->getParentNode()->useUFSTraversing(this->endingNodeOfPattern, countEdgesLengthFromPatternEndToLeaf);
-	countEdgesLengthFromPatternEndToLeaf += (this->endingNodeOfPattern->getToIndex() - this->endingNodeOfPattern->getFromIndex() - this->positionWherePatternFinishedFromBeginningOfEndingNode);
 
-	int fromIndex = this->currentOccurrence->getFromIndex() - countEdgesLengthFromPatternEndToLeaf - this->pattern.length();
-	int toIndex = fromIndex + pattern.length();
-	return new SuffixTreeIterator(fromIndex, toIndex);
-}
-
-SuffixTreeService::SuffixTreeService(const std::string& textToAnalyze): textToAnalyze(textToAnalyze), pattern(""), mostLeftLeafNodeInPatternPath(nullptr), mostRightLeafNodeInPatternPath(nullptr), lastNodeInAlphaOrder(nullptr),currentOccurrence(nullptr), positionWherePatternFinishedFromBeginningOfEndingNode(-1), endingNodeOfPattern(nullptr)
+SuffixTreeService::SuffixTreeService(const std::string& textToAnalyze): textToAnalyze(textToAnalyze), pattern(""), mostLeftLeafNodeInPatternPath(nullptr), mostRightLeafNodeInPatternPath(nullptr),currentOccurrence(nullptr), positionWherePatternFinishedFromBeginningOfEndingNode(-1), endingNodeOfPattern(nullptr)
 {
 	tree = new SuffixTree(this->textToAnalyze);
+}
+
+SuffixTreeService::SuffixTreeService()
+{
+}
+
+std::string SuffixTreeService::getTextToAnalyze()
+{
+	return this->textToAnalyze;
+}
+
+std::string SuffixTreeService::getPattern()
+{
+	return this->pattern;
+}
+
+SuffixTree* SuffixTreeService::getTree()
+{
+	return this->tree;
+}
+
+int SuffixTreeService::getPositionWherePatternFinishedFromBeginningOfEndingNode()
+{
+	return this->positionWherePatternFinishedFromBeginningOfEndingNode;
+}
+
+Node* SuffixTreeService::getEndingNodeOfPattern()
+{
+	return this->endingNodeOfPattern;
+}
+
+Node* SuffixTreeService::getMostLeftLeafNodeInPatternPath()
+{
+	return this->mostLeftLeafNodeInPatternPath;
+}
+
+Node* SuffixTreeService::getMostRightLeafNodeInPatternPath()
+{
+	return this->mostRightLeafNodeInPatternPath;
+}
+
+Node* SuffixTreeService::getCurrentOccurrence()
+{
+	return this->currentOccurrence;
+}
+
+void SuffixTreeService::setCurrentOccurrence(Node* currentOccurrence)
+{
+	this->currentOccurrence = currentOccurrence;
+}
+
+void SuffixTreeService::setMostRightLeafNodeInPatternPath(Node* mostRightLeafNodeInPatternPath)
+{
+	this->mostRightLeafNodeInPatternPath = mostRightLeafNodeInPatternPath;
+}
+
+void SuffixTreeService::setMostLeftLeafNodeInPatternPath(Node* mostLeftLeafNodeInPatternPath)
+{
+	this->mostLeftLeafNodeInPatternPath = mostLeftLeafNodeInPatternPath;
+}
+
+void SuffixTreeService::setEndingNodeOfPattern(Node* endingNodeOfPattern)
+{
+	this->endingNodeOfPattern = endingNodeOfPattern;
+}
+
+void SuffixTreeService::setPattern(const std::string& pattern)
+{
+	this->pattern = pattern;
 }
 
 
@@ -104,138 +159,5 @@ int SuffixTreeService::countOccurrencesOfPattern(const std::string& pattern)
 	}
 	else {
 		return 0;
-	}
-}
-
-SuffixTreeService::iterator SuffixTreeService::findFirstOccurrenceOfPattern(const std::string& pattern)
-{
-	if (checkIfPatternExist(pattern) == true) {
-		int fromIndex = this->endingNodeOfPattern->getFromIndex() - (pattern.length() - this->positionWherePatternFinishedFromBeginningOfEndingNode);
-		int toIndex = fromIndex + pattern.length();
-		setBorder(pattern);
-		this->pattern = pattern;
-		this->currentOccurrence = this->mostLeftLeafNodeInPatternPath;
-		return new SuffixTreeIterator(fromIndex, toIndex);
-	}
-	else {
-		return nullptr;
-	}			
-}
-
-
-SuffixTreeIterator* SuffixTreeService::findNextOccurrenceOfPattern()
-{
-	if (this->currentOccurrence == this->mostRightLeafNodeInPatternPath){
-		this->mostLeftLeafNodeInPatternPath = nullptr;
-		this->mostRightLeafNodeInPatternPath = nullptr;
-		this->currentOccurrence = nullptr;
-		return nullptr;
-	}
-	else {
-		this->currentOccurrence = this->currentOccurrence->getNodeChildren()[1];
-		return getIteratorOfOccurrence(pattern);
-	}
-}
-SuffixTreeIterator* SuffixTreeService::findPreviousOccurrenceOfPattern()
-{
-	if (this->currentOccurrence == this->mostLeftLeafNodeInPatternPath) {
-		return nullptr;
-	}
-	else {
-		this->currentOccurrence = this->currentOccurrence->getNodeChildren()[0];
-		return getIteratorOfOccurrence(pattern);
-	}
-}
-SuffixTreeIterator* SuffixTreeService::findLastOccurrenceOfPattern(const std::string& pattern)
-{
-	this->pattern = pattern;
-	if (checkIfPatternExist(pattern) == true) {
-		setBorder(pattern);
-		this->currentOccurrence = this->mostRightLeafNodeInPatternPath;
-
-		return getIteratorOfOccurrence(pattern);
-	}
-	else {
-		return nullptr;
-	}
-}
-SuffixTreeIterator* SuffixTreeService::findNextNodeInAlphabeticalOrder()
-{
-	Node* parentNode = this->lastNodeInAlphaOrder->getParentNode();
-	if (this->lastNodeInAlphaOrder != tree->getRoot()) {
-		this->lastLetterInAlphaOrder = this->textToAnalyze[this->lastNodeInAlphaOrder->getFromIndex()];
-
-
-		while (this->lastNodeInAlphaOrder->getChildrenArraySize() > 0) {
-			Node* foundNode = parentNode->getNodeChildren()[0];
-			char theEarliestLetter = this->lastLetterInAlphaOrder;
-			for (int iter = 0; iter < node->getChildrenArraySize(); ++iter) {
-				if (this->textToAnalyze[node->getNodeChildren()[iter]->getFromIndex()] < this->lastLetterInAlphaOrder) {
-					theEarliestLetter = this->textToAnalyze[node->getNodeChildren()[iter]->getFromIndex()];
-					foundNode = node->getNodeChildren()[iter];
-				}
-			}
-			//schodzimy do kolejnego poziomu 
-			node = foundNode;
-		}
-		this->endingNodeOfPattern = node;
-		int countEdgesLengthFromPatternEndToLeaf = 0;
-		node->getParentNode()->useUFSTraversing(tree->getRoot(), countEdgesLengthFromPatternEndToLeaf);
-		countEdgesLengthFromPatternEndToLeaf += (this->endingNodeOfPattern->getToIndex() - this->endingNodeOfPattern->getFromIndex() - this->positionWherePatternFinishedFromBeginningOfEndingNode);
-		this->lastNodeInAlphaOrder = node;
-		int fromIndex = node->getFromIndex() - countEdgesLengthFromPatternEndToLeaf;
-		int toIndex;
-		if (node->getParentNode() == tree->getRoot()) {
-			toIndex = node->getToIndex();
-		}
-		else {
-			toIndex = fromIndex + countEdgesLengthFromPatternEndToLeaf;
-		}
-		return new SuffixTreeIterator(fromIndex, toIndex);
-
-
-		int countEdgesLengthFromPatternEndToLeaf = 0;
-		this->currentOccurrence->getParentNode()->useUFSTraversing(this->endingNodeOfPattern, countEdgesLengthFromPatternEndToLeaf);
-		countEdgesLengthFromPatternEndToLeaf += (this->endingNodeOfPattern->getToIndex() - this->endingNodeOfPattern->getFromIndex() - this->positionWherePatternFinishedFromBeginningOfEndingNode);
-
-		int fromIndex = this->currentOccurrence->getFromIndex() - countEdgesLengthFromPatternEndToLeaf - this->pattern.length();
-		int toIndex = fromIndex + pattern.length();
-		return new SuffixTreeIterator(fromIndex, toIndex);
-	}
-}
-SuffixTreeIterator* SuffixTreeService::findFirstNodeInAlphabeticalOrder()
-{
-	Node* node = tree->getRoot();
-	if (node->getChildrenArraySize() == 0) {
-		return nullptr;
-	}
-	else {
-
-		while (node->getChildrenArraySize() > 0) {
-			Node* foundNode = node->getNodeChildren()[0];
-			char theEarliestLetter = this->textToAnalyze[node->getNodeChildren()[0]->getFromIndex()];
-			for (int iter = 1; iter < node->getChildrenArraySize(); ++iter) {
-				if (this->textToAnalyze[node->getNodeChildren()[iter]->getFromIndex()] < theEarliestLetter) {
-					theEarliestLetter = this->textToAnalyze[node->getNodeChildren()[iter]->getFromIndex()];
-					foundNode = node->getNodeChildren()[iter];
-				}
-			}
-			//schodzimy do kolejnego poziomu 
-			node = foundNode;
-		}
-		this->endingNodeOfPattern = node;
-		int countEdgesLengthFromPatternEndToLeaf = 0;
-		node->getParentNode()->useUFSTraversing(tree->getRoot(), countEdgesLengthFromPatternEndToLeaf);
-		countEdgesLengthFromPatternEndToLeaf += (this->endingNodeOfPattern->getToIndex() - this->endingNodeOfPattern->getFromIndex() - this->positionWherePatternFinishedFromBeginningOfEndingNode);
-		this->lastNodeInAlphaOrder = node;
-		int fromIndex = node->getFromIndex() - countEdgesLengthFromPatternEndToLeaf;
-		int toIndex;
-		if (node->getParentNode() == tree->getRoot()) {
-			toIndex = node->getToIndex();
-		}
-		else {
-			toIndex = fromIndex + countEdgesLengthFromPatternEndToLeaf;
-		}
-		return new SuffixTreeIterator(fromIndex, toIndex);
 	}
 }

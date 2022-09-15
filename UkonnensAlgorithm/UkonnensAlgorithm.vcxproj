@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ActivePoint.cpp" />
+    <ClCompile Include="AlphabeticalOrderIterator.cpp" />
     <ClCompile Include="FileService.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Node.cpp" />
@@ -149,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActivePoint.h" />
+    <ClInclude Include="AlphabeticalOrderIterator.h" />
     <ClInclude Include="FileService.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="SuffixTree.h" />
